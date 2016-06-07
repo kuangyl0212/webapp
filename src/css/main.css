@@ -1,0 +1,8 @@
+.m-noti{height: 36px;padding: 0 206px;font: 12px/36px "Microsoft YaHei",sans-serif;color: #333;background: #f3f3f3;}
+.m-noti .closer{float: right;padding-left: 15px;background-image: url(../img/bg.png);background-position: 0 15px;}
+.m-noti a{text-decoration: none;color: #21a557;}
+.m-nav{height: 89px;padding: 0 206px;}
+.m-nav div,li{display: inline-block;}
+.m-nav ul{float: right;}
+.m-nav #edu{font: 28px/89px "Gill Sans MT Bold",sans-serif;color: #39a030;}
+.m-nav #name{font: 22px/89px "黑体", serif;color: #333;}
