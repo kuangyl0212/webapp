@@ -2,11 +2,16 @@
 @media screen and (min-width:1616px) {
 
 }
+@media screen and (min-width:1365px) and (max-width:1615px) {
+  .m-products .description a{margin-bottom: -22px;}
+}
 /*窄屏布局*/
 @media screen and (max-width:1364px) {
   .container{width: 1364px;}
   .m-products{height: 295px;}
   .m-products .description a{margin-bottom: -22px;}
+  .m-slider{width: 1364px;}
+  .m-slider .image{width: 1490px;overflow: hidden;margin-left: -126px;}
   .workEnv{margin-left: -126px;}
 }
 /*公共部分*/
@@ -21,18 +26,18 @@
 .m-nav .logo, .follow, .link{line-height: 89px;vertical-align: middle;}
 .m-nav .link{float: right;}
 .m-nav ul li{float: left;margin-left: 38px;vertical-align: middle;}
-.m-nav #edu{font: 28px/28px "Microsoft YaHei",sans-serif;font-weight: bold;color: #39a030;}
+.m-nav #edu{font: 28px/1 "Microsoft YaHei",sans-serif;font-weight: bold;color: #39a030;}
 .m-nav .split{width: 1px;height: 18px;background: #39a030;}
-.m-nav #name{margin-right: 30px;font: 22px/22px "Microsoft YaHei", serif;color: #333;}
+.m-nav #name{margin-right: 30px;font: 22px/1 "Microsoft YaHei", serif;color: #333;}
 .m-nav button{margin-right: 13px;padding-left:20px;width: 54px;height: 21px;border: 0;border-radius: 1px;color: #fff;font: 12px/21px simsun;background:url(../img/bg.png) 9px -24px no-repeat, #21a557;}
 .m-nav .follow{font-size: 12px;font-family: simsun;}
 .m-nav ul a{font-size: 16px;font-family: "Microsoft YaHei";text-decoration: none;color: #666;}
 .m-nav #search{width: 19px;height: 19px;margin-top: 35px;background: url(../img/bg.png) 0 -62px no-repeat;cursor: pointer;}
 
 /*幻灯片*/
-.m-slider{position: relative;height: 460px;width: 100%;margin: 0 auto;}
-.m-slider .image{width: 100%;text-align: center;overflow:hidden;}
-.m-slider .image img{display: inline-block;}
+.m-slider{position: relative;height: 460px;}
+.m-slider .image{text-align: center;}
+.m-slider .image img{}
 .m-slider .pointer{display: flex;justify-content: space-between;position: absolute;bottom: 20px;left: 50%;transform: translateX(-50%);width: 52px;height: 10px;}
 .m-slider i{display: inline-block;width: 10px;height: 10px;border-radius: 5px;background: #fff;}
 .m-slider .current{background: #333;}
@@ -51,3 +56,31 @@
 /*工作环境*/
 .workEnv{height: 220px;overflow: hidden;white-space: nowrap;text-align: center;}
 .workEnv img+img{margin-left: 4px;}
+
+/*课程*/
+.m-courList{position: relative;width: 100%;height: 1551px;background: #f8f8f8;}
+.m-courList .side{position: absolute;top: 84px;right: 206px;width: 223px;}
+.m-courList .main{padding: 84px 429px 120px 206px;}
+.m-courList .main .nav{width: 400px;height: 50px;box-shadow: 1px 1px #ecebeb;text-align: center;}
+.m-courList .main .navi{float: left;width: 200px;height: 50px;}
+.m-courList .navi{font:20px/50px "Microsoft YaHei";color: #666;background: #fff;}
+.m-courList .active{color: #fff;background: #39a030;}
+.m-courList .side .introduce{width: 223px;height: 229px;margin-bottom: 21px;box-shadow: -1px 1px 0 #ecebeb, 0 1px #ecebeb, 1px 1px 0 #ecebeb;background: #fff}
+.m-courList .introduce .title{width: 223px;;height: 55px;padding-left: 20px;box-sizing: border-box;box-shadow: 0 1px #ddd;font: 16px/55px "Microsoft YaHei";color: #333;}
+.m-courList .introduce .video{padding: 22px;font: 14px/1 "Microsoft YaHei";color: #666;}
+.m-courList .introduce img{margin-top: 9px;}
+/*页脚*/
+.m-footer{height: 262px;padding: 0 206px;overflow: hidden;color: #bebfc0;background: #2c3339;}
+.m-footer .left, .right1, .right2, .right3{float: left;padding-top: 81px;}
+.m-footer .left{margin-right: 150px;}
+.m-footer .right1{margin-right: 98px;}
+.m-footer .right2{margin-right: 72px;}
+.m-footer .logo{padding-top: 11px;margin-bottom: 25px;}
+.m-footer .logo div{display: inline-block;vertical-align: middle;}
+.m-footer #edu{font: 28px/1 "Microsoft YaHei",sans-serif;font-weight: bold;color: #39a030;}
+.m-footer .split{width: 1px;height: 18px;background: #39a030;}
+.m-footer #name{font: 22px/1 "Microsoft YaHei", serif;color: #39a030;}
+.m-footer .left p{white-space: nowrap;font: 12px/22px "Microsoft YaHei";}
+.m-footer dt{font: 12px/28px "Microsoft YaHei";}
+.m-footer dd a{font: 14px/28px "Microsoft YaHei";color: #bebfc0;text-decoration: none;}
+.m-footer #weibo{width: 60px;background: url(../img/bg.png) 36px -423px no-repeat;cursor: pointer;}
