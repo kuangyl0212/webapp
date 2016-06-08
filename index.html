@@ -4,6 +4,7 @@
 	<title>网易教育产品部</title>
   <link rel="stylesheet" href="src/css/cssreset.css">
   <link rel="stylesheet" href="src/css/main.css">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
 </head>
 <body>
 <div class="container">
@@ -13,39 +14,60 @@
 	</div>
 	<div class="m-nav">
 		<!-- logo -->
-		<div class="logo">
-			<div id="edu">EDU</div><div id="name">网易教育产品部</div>
-		</div>
+		<div class="logo"><div id="edu">EDU</div>
+		<div class="split"></div>
+		<div id="name">网易教育产品部</div>
+	</div>
 		<!-- follow -->
-		<div>
-			<button>+关注</button><span>粉丝</span>
+		<div class="follow">
+			<button>关注</button><span>粉丝</span>
+			<span>45</span>
 		</div>
 		<!-- list -->
-		<ul>
-			<li><a href="http://open.163.com/">网易公开课</a></li>
-			<li><a href="http://study.163.com/">云课堂</a></li>
-			<li><a href="http://www.icourse163.org/">中国大学MOOC</a></li>
-		</ul>
-		<!-- search -->
-		<div></div>
+		<div class="link">
+			<ul>
+				<li><a href="http://open.163.com/">网易公开课</a></li>
+				<li><a href="http://study.163.com/">云课堂</a></li>
+				<li><a href="http://www.icourse163.org/">中国大学MOOC</a></li>
+				<li id="search"></li>
+			</ul>
+		</div>
 	</div>
 	<div class="banner">
 		<!-- slider -->
-		<div class="m-slider"></div>
-		<div>
-			<ul>
-				<li>网易公开课</li>
-				<li>云课堂</li>
-				<li>中国大学MOOC</li>
-			</ul>
+		<div class="m-slider">
+			<div class="image"><img src="src/img/banner1.jpg" alt="" /></div>
+			<div class="pointer"><i class="current"></i><i></i><i></i></div>
+		</div>
+			<div class="m-products" id="prod1">
+					<div class="product" id="product1">
+						<div class="logo"></div>
+						<div class="description">
+							<h3>网易公开课</h3>
+							<p>推出国内外名校公开课，涉及广泛的学科，名校老师认真讲解深度剖析，网易视频公开课频道搭建强有力的网络视频教学平台。</p>
+							<a href="#">了解更多></a>
+						</div>
+					</div>
+					<div class="product" id="prod2">
+						<div class="logo"></div>
+						<div class="description">
+							<h3>云课堂</h3>
+							<p>网易旗下大型在线学习平台，该平台面向学习者提供海量免费、优质课程，创新的个性化学习体验，自由开放的交流互动环境。</p>
+							<a href="#">了解更多></a>
+						</div>
+					</div>
+					<div class="product" id="prod3">
+						<div class="logo"></div>
+						<div class="description">
+							<h3>网易公开课</h3>
+							<p>推出国内外名校公开课，涉及广泛的学科，名校老师认真讲解深度剖析，网易视频公开课频道搭建强有力的网络视频教学平台。</p>
+							<a href="#">了解更多></a>
+						</div>
+					</div>
 		</div>
 		<!-- 工作环境 -->
-		<div>
-			<img src="" alt="">
-			<img src="" alt="">
-			<img src="" alt="">
-			<img src="" alt="">
-			<img src="" alt="">
+		<div class="workEnv">
+			<img src="src/img/w1.jpg" alt=""><img src="src/img/w2.jpg" alt=""><img src="src/img/w3.jpg" alt=""><img src="src/img/w4.jpg" alt=""><img src="src/img/w5.jpg" alt="">
 		</div>
 	</div>
 	<div class="m-courList">
