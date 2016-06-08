@@ -1,8 +1,53 @@
+/*宽屏布局*/
+@media screen and (min-width:1616px) {
+
+}
+/*窄屏布局*/
+@media screen and (max-width:1364px) {
+  .container{width: 1364px;}
+  .m-products{height: 295px;}
+  .m-products .description a{margin-bottom: -22px;}
+  .workEnv{margin-left: -126px;}
+}
+/*公共部分*/
+/*通知栏*/
 .m-noti{height: 36px;padding: 0 206px;font: 12px/36px "Microsoft YaHei",sans-serif;color: #333;background: #f3f3f3;}
-.m-noti .closer{float: right;padding-left: 15px;background-image: url(../img/bg.png);background-position: 0 15px;}
+.m-noti .closer{float: right;padding-left: 15px;background-image: url(../img/bg.png);background-repeat: no-repeat;background-position: 0 15px;cursor: pointer;}
 .m-noti a{text-decoration: none;color: #21a557;}
+
+/*导航*/
 .m-nav{height: 89px;padding: 0 206px;}
-.m-nav div,li{display: inline-block;}
-.m-nav ul{float: right;}
-.m-nav #edu{font: 28px/89px "Gill Sans MT Bold",sans-serif;color: #39a030;}
-.m-nav #name{font: 22px/89px "黑体", serif;color: #333;}
+.m-nav div{display: inline-block;vertical-align: middle;}
+.m-nav .logo, .follow, .link{line-height: 89px;vertical-align: middle;}
+.m-nav .link{float: right;}
+.m-nav ul li{float: left;margin-left: 38px;vertical-align: middle;}
+.m-nav #edu{font: 28px/28px "Microsoft YaHei",sans-serif;font-weight: bold;color: #39a030;}
+.m-nav .split{width: 1px;height: 18px;background: #39a030;}
+.m-nav #name{margin-right: 30px;font: 22px/22px "Microsoft YaHei", serif;color: #333;}
+.m-nav button{margin-right: 13px;padding-left:20px;width: 54px;height: 21px;border: 0;border-radius: 1px;color: #fff;font: 12px/21px simsun;background:url(../img/bg.png) 9px -24px no-repeat, #21a557;}
+.m-nav .follow{font-size: 12px;font-family: simsun;}
+.m-nav ul a{font-size: 16px;font-family: "Microsoft YaHei";text-decoration: none;color: #666;}
+.m-nav #search{width: 19px;height: 19px;margin-top: 35px;background: url(../img/bg.png) 0 -62px no-repeat;cursor: pointer;}
+
+/*幻灯片*/
+.m-slider{position: relative;height: 460px;width: 100%;margin: 0 auto;}
+.m-slider .image{width: 100%;text-align: center;overflow:hidden;}
+.m-slider .image img{display: inline-block;}
+.m-slider .pointer{display: flex;justify-content: space-between;position: absolute;bottom: 20px;left: 50%;transform: translateX(-50%);width: 52px;height: 10px;}
+.m-slider i{display: inline-block;width: 10px;height: 10px;border-radius: 5px;background: #fff;}
+.m-slider .current{background: #333;}
+
+/*三个产品*/
+.m-products{display: table;table-layout: fixed;height: 295px;margin-left: -80px;padding: 0 206px;}
+.m-products .product{display: table-cell;height: 295px;padding-left: 80px;}
+.m-products .logo{float: left;width: 80px;height: 80px;margin-top: 68px;border-radius: 40px;background: url(../img/bg.png) 20px -96px no-repeat,#39a030;}
+.m-products .description{position: relative;height: 100%;padding: 55px 0 0 100px;}
+.m-products .description h3{display: inline-block;font: 22px/40px "Microsoft YaHei";color: #333;}
+.m-products .description p{display: inline-block;margin-top: 6px;font: 14px/24px "Microsoft YaHei";color: #666;}
+.m-products .description a{position: absolute;bottom: 58px;display: inline-block;font:14px "Microsoft YaHei";text-decoration: none;color: #39a030;}
+.m-products #prod2 .logo{background-position: 20px -202px;}
+.m-products #prod3 .logo{background-position: 20px -316px;}
+
+/*工作环境*/
+.workEnv{height: 220px;overflow: hidden;white-space: nowrap;text-align: center;}
+.workEnv img+img{margin-left: 4px;}
