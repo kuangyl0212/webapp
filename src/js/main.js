@@ -1,9 +1,65 @@
+//一些兼容性实现
+//getElementByClassName
+
+
 /**
  * 通知条
  * 点击“ X 不再提醒”后，刷新页面不再出现
  */
 ;(function(){
+	//设置和检查cooki设置成外部函数，如果已经设置了不再显示，则不需要实例化noti类
+	function checkCookie(){
+		var cookies = document.cookie;
+		var reg = new RegExp("(\\s|^)setNotiOff=1(;|$)");
+		if(reg.test(cookies)){
+			return true;
+		}
+		return false;
 
+	}
+	function Notify(){
+		this.setContent('网易云课堂微专业，帮助你掌握专业技能，令你求职或加薪多一份独特优势！');
+		this.closer = this.dom.getElementsByClassName("closer")[0];
+	}
+	Notify.prototype = {
+		template : '<div class="closer">不再提醒</div>\
+		<p>内容<a href="">立即查看&gt;</a></p>',
+		setContent : function(str){
+			var dom = document.createElement('div');
+			dom.className = 'm-noti';
+			dom.innerHTML = this.template;
+			var p = dom.getElementsByTagName('p')[0];
+			p.childNodes[0].nodeValue = str;
+			this.dom = dom;
+		},
+		//点不再显示的时候设置cookie
+		setCookie : function(){
+			document.cookie=encodeURIComponent("setNotiOff") + "=" + 
+											encodeURIComponent("1");
+		},
+		show : function(){
+			this.parentNode = document.getElementsByClassName('container')[0];
+			this.siblingDom = this.parentNode.children[0];
+			//在页面中添加noti节点(在siblingdom前面添加)
+			this.parentNode.insertBefore(this.dom, this.siblingDom);
+		},
+		close : function(parentNode, node){
+			//从页面中删除节点
+			parentNode.removeChild(node);
+		}
+	}
+	Notify.int = function(str){
+		if (!checkCookie()){
+			var a = new Notify(str);
+			a.closer.addEventListener('click', function(){
+				a.close(a.parentNode, a.dom);
+				a.setCookie();
+			})
+			a.show();
+
+		}
+	}
+	window['Notify'] = Notify;
 })()
 
 /**
@@ -160,7 +216,76 @@
   window['Slider'] = Slider;
 })();
 
+// 弹窗类
+;(function(){
+ function Pop(){};
+ Pop.prototype = {
+ 	cerateDom : function(){
+ 		var dom = document.createElement('div');
+ 		dom.className = this.setting.className;
+ 		dom.innerHTML = this.setting.str;
+ 		this.dom = dom;
+ 	},
+ 	setParentNode : function(dom){
+ 		this.setting.parentNode = dom;
+ 	},
+ 	show : function(){
+ 		this.setting.parentNode.appendChild(this.dom);
+ 	},
+ 	remove : function(){
+ 		this.setting.parentNode.removeChild(this.dom);
+ 	}
+ }
+ function PopVideo(){
+ 	this.setting = {
+ 		className : 'videoPlayer',
+ 		str : '<div class="videoDiv"><h5>请观看下面的视频</h5><video src="http://mov.bn.netease.com/open-movie/nos/mp4/2014/12/30/SADQ86F5S_shd.mp4" controls="controls" width="890px"></video><div class="closer"></div></div>',
+ 	}
+ }
+ PopVideo.prototype = new Pop();
+ PopVideo.int = function(){
+ 	var trigger = document.getElementsByClassName('introduce')[0].getElementsByTagName('img')[0];
+ 	var container = document.getElementsByClassName('container')[0];
+ 	var pop = new PopVideo();
+ 	var closer;
+	pop.cerateDom();
+	pop.setParentNode(container);
+	closer = pop.dom.getElementsByClassName('closer')[0];
+	trigger.addEventListener('click', function(){
+		pop.show();
+	})
+	closer.addEventListener('click', function(){
+		pop.remove();
+	})
+	console.log(pop.dom)
+	console.log(trigger)
+ }
+ //注册
+ window['PopVideo'] = PopVideo;
+})()
+
 //初始化页面
-window.onload = function(){
-  Slider.int();
-}
+// window.onload = function(){
+//   Slider.int();
+//   Notify.int();
+// }
+;(function(){
+	document.addEventListener("DOMContentLoaded", function(){
+	Slider.int();
+	Notify.int();
+	PopVideo.int();
+})
+})()
+
+// var xhr = new XMLHttpRequest();
+// xhr.open('get', 'http://study.163.com/webDev/couresByCategory.htm?pageNo=1&psize=10&type=10', true);
+
+// xhr.send("")
+// xhr.onreadystatechange = function(){
+// 	if(xhr.readyState === 4){
+// 		if((xhr.status >= 200 && xhr.status <300) || xhr.status === 304){
+// 			var data = JSON.parse(xhr.responseText)
+// 			console.log(data)
+// 		}else{console.log('faild')}
+// 	}
+// }
