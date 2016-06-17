@@ -18,7 +18,7 @@
 	};
 	function Notify(){
 		this.setContent('网易云课堂微专业，帮助你掌握专业技能，令你求职或加薪多一份独特优势！');
-		this.closer = this.dom.getElementsByClassName("closer")[0];
+		this.closer = this.dom.querySelector(".closer");
 	};
 	Notify.prototype = {
 		template : '<div class="closer">不再提醒</div>\
@@ -33,11 +33,11 @@
 		},
 		//点不再显示的时候设置cookie
 		setCookie : function(){
-			document.cookie=encodeURIComponent("setNotiOff") + "=" + 
+			document.cookie=encodeURIComponent("setNotiOff") + "=" +
 											encodeURIComponent("1");
 		},
 		show : function(){
-			this.parentNode = document.getElementsByClassName('container')[0];
+			this.parentNode = document.querySelector('.container');
 			this.siblingDom = this.parentNode.children[0];
 			//在页面中添加noti节点(在siblingdom前面添加)
 			this.parentNode.insertBefore(this.dom, this.siblingDom);
@@ -83,7 +83,7 @@
   	//保存图片节点
   	this.imgContainer = this.dom.getElementsByTagName('img')[0];
   	//保存圆点节点
-  	this.pointers = this.dom.getElementsByClassName('pointer')[0];
+  	this.pointers = this.dom.querySelector('.pointer');
   	//接受datasetting方式的外部设置
   	this.userSetting = JSON.parse(dom.getAttribute('data-setting'));
   	this.imgContainer.addEventListener('click',this.openLink);
@@ -189,7 +189,7 @@
   	}
   };
   Slider.int = function(){
-  	var doms = document.getElementsByClassName('m-slider');
+  	var doms = document.querySelectorAll('.m-slider');
   	var _this_ = this;
   	for (var i = 0; i < doms.length; i++) {
   		//生成slider
@@ -245,7 +245,7 @@
  function PopVideo(){};
  PopVideo.prototype = new Pop();
  PopVideo.int = function(){
- 	var trigger = document.getElementsByClassName('introduce')[0].getElementsByTagName('img')[0];
+ 	var trigger = document.querySelector('.introduce').getElementsByTagName('img')[0];
  	var pop = new PopVideo();
  	var content = '<div class="videoDiv">\
  		<h5>请观看下面的视频</h5>\
@@ -253,9 +253,9 @@
  		controls="controls" width="890px"></video>\
  		<div class="closer"></div>\
  		</div>';
- 	pop.setParentNode(document.getElementsByClassName('container')[0])
+ 	pop.setParentNode(document.querySelector('.container'))
 	pop.cerateDom('videoPlayer',content);
-	var closer = pop.dom.getElementsByClassName('closer')[0];
+	var closer = pop.dom.querySelector('.closer');
 	trigger.addEventListener('click', function(){
 		pop.show();
 	})
@@ -274,7 +274,7 @@
  }
  function PopLogin(){
  	this.setTrriger = function(){
- 		var dom = document.getElementsByClassName('follow')[0];
+ 		var dom = document.querySelector('.follow');
  		dom.innerHTML = '<div class="button">关注</div>\
  			<span>粉丝</span>\
 			<span>45</span>';
@@ -282,17 +282,17 @@
 		console.log(this.trigger)
  	}
  	this.setCookie = function(str){
- 		document.cookie=encodeURIComponent(str) + "=" + 
+ 		document.cookie=encodeURIComponent(str) + "=" +
 										encodeURIComponent("1");
 	};
 	this.login = function(username, password){
 		var xhr = new XMLHttpRequest();
-		var url = 'http://study.163.com/webDev/login.htm?userName=' + 
+		var url = 'http://study.163.com/webDev/login.htm?userName=' +
 							username + '&password=' + password;
 		xhr.open('get', url, true);
 		xhr.send(null);
 		var loginObj = this;
-		var button = this.dom.getElementsByClassName('submit')[0];
+		var button = this.dom.querySelector('.submit');
 		xhr.onreadystatechange = function(){
 			if(xhr.readyState === 4){
 				if((xhr.status >= 200 && xhr.status <300) || xhr.status === 304){
@@ -325,7 +325,7 @@
  };
  PopLogin.prototype = new Pop();
  PopLogin.int = function(){
- 	var dom = document.getElementsByClassName('follow')[0]
+ 	var dom = document.querySelector('.follow');
  	if(checkCookie('followSuc=1')){
  		dom.innerHTML = '<span class="spa">已关注</span>\n<span>|</span>\n<a href="#">取消</a>';
 		dom.className = 'followed';
@@ -333,7 +333,7 @@
  		var pop = new PopLogin();
  		pop.setTrriger();
  		console.log(pop.trigger)
-	 	var container = document.getElementsByClassName('container')[0];
+	 	var container = document.querySelector('.container');
 	 	var content = '<div class="formDiv">\
 	 		<form action="">\
 	 		<legend>登录网易云课堂</legend>\
@@ -345,15 +345,15 @@
 	 		</div>';
 	 	pop.cerateDom('m-login', content);
 		pop.setParentNode(container);
-		var closer = pop.dom.getElementsByClassName('closer')[0];
+		var closer = pop.dom.querySelector('.closer');
 		pop.trigger.addEventListener('click', function(){
 		 	if (!checkCookie('loginSuc=1')) {
 				pop.show();
 				closer.addEventListener('click', function(){
 					pop.remove();
 				})
-				var usernameDom = pop.dom.getElementsByClassName('username')[0];
-				var passwordDom = pop.dom.getElementsByClassName('password')[0];
+				var usernameDom = pop.dom.querySelector('.username');
+				var passwordDom = pop.dom.querySelector('.password');
 				usernameDom.addEventListener('focus',function(){
 					if(this.value === '账号'){
 						this.value = '';
@@ -396,7 +396,7 @@
 //最热排行
 ;(function(){
 	//创建一个简单队列类，实现先进先出
-	
+
 })()
 
 //初始化页面
