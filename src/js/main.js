@@ -15,12 +15,11 @@
 			return true;
 		}
 		return false;
-
-	}
+	};
 	function Notify(){
 		this.setContent('网易云课堂微专业，帮助你掌握专业技能，令你求职或加薪多一份独特优势！');
 		this.closer = this.dom.getElementsByClassName("closer")[0];
-	}
+	};
 	Notify.prototype = {
 		template : '<div class="closer">不再提醒</div>\
 		<p>内容<a href="">立即查看&gt;</a></p>',
@@ -47,7 +46,7 @@
 			//从页面中删除节点
 			parentNode.removeChild(node);
 		}
-	}
+	};
 	Notify.int = function(str){
 		if (!checkCookie()){
 			var a = new Notify(str);
@@ -58,7 +57,7 @@
 			a.show();
 
 		}
-	}
+	};
 	window['Notify'] = Notify;
 })()
 
@@ -88,14 +87,19 @@
   	//接受datasetting方式的外部设置
   	this.userSetting = JSON.parse(dom.getAttribute('data-setting'));
   	this.imgContainer.addEventListener('click',this.openLink);
-  }
+  };
   //在在原型上绑定共有属性
   Slider.prototype = {
   	index : 0, //用来保存当前显示的图片序号
   	defaultSetting : {
     	speed:5000,
-    	img:["src/img/slider/1.jpg","src/img/slider/2.jpg","src/img/slider/3.jpg","src/img/slider/4.jpg"],
-    	links: ["http://open.163.com/","http://study.163.com/","http://www.icourse163.org/"],
+    	img:["src/img/slider/1.jpg",
+    		"src/img/slider/2.jpg",
+    		"src/img/slider/3.jpg",
+    		"src/img/slider/4.jpg"],
+    	links: ["http://open.163.com/",
+    		"http://study.163.com/",
+    		"http://www.icourse163.org/"],
     	animation:"fadeIn",
     	animationDuration:500,
     },
@@ -183,7 +187,7 @@
   	setOffAutoPlay: function(){
   		clearInterval(this.interval1);
   	}
-  }
+  };
   Slider.int = function(){
   	var doms = document.getElementsByClassName('m-slider');
   	var _this_ = this;
@@ -211,57 +215,188 @@
   		a.showImg();
   		a.autoPlay();
   	}
-  }
+  };
   //注册slider类
   window['Slider'] = Slider;
 })();
 
 // 弹窗类
 ;(function(){
+ //创建一个备胎父类
  function Pop(){};
  Pop.prototype = {
- 	cerateDom : function(){
- 		var dom = document.createElement('div');
- 		dom.className = this.setting.className;
- 		dom.innerHTML = this.setting.str;
- 		this.dom = dom;
- 	},
  	setParentNode : function(dom){
- 		this.setting.parentNode = dom;
+ 		this.parentNode = dom;
+ 	},
+ 	cerateDom : function(className, content){
+ 		var dom = document.createElement('div');
+ 		dom.innerHTML = content;
+ 		this.dom = dom;
+ 		this.dom.className = className;
  	},
  	show : function(){
- 		this.setting.parentNode.appendChild(this.dom);
+ 		this.parentNode.appendChild(this.dom);
  	},
  	remove : function(){
- 		this.setting.parentNode.removeChild(this.dom);
- 	}
- }
- function PopVideo(){
- 	this.setting = {
- 		className : 'videoPlayer',
- 		str : '<div class="videoDiv"><h5>请观看下面的视频</h5><video src="http://mov.bn.netease.com/open-movie/nos/mp4/2014/12/30/SADQ86F5S_shd.mp4" controls="controls" width="890px"></video><div class="closer"></div></div>',
- 	}
- }
+ 		this.parentNode.removeChild(this.dom);
+ 	},
+ };
+ //弹窗视频类
+ function PopVideo(){};
  PopVideo.prototype = new Pop();
  PopVideo.int = function(){
  	var trigger = document.getElementsByClassName('introduce')[0].getElementsByTagName('img')[0];
- 	var container = document.getElementsByClassName('container')[0];
  	var pop = new PopVideo();
- 	var closer;
-	pop.cerateDom();
-	pop.setParentNode(container);
-	closer = pop.dom.getElementsByClassName('closer')[0];
+ 	var content = '<div class="videoDiv">\
+ 		<h5>请观看下面的视频</h5>\
+ 		<video src="http://mov.bn.netease.com/open-movie/nos/mp4/2014/12/30/SADQ86F5S_shd.mp4" \
+ 		controls="controls" width="890px"></video>\
+ 		<div class="closer"></div>\
+ 		</div>';
+ 	pop.setParentNode(document.getElementsByClassName('container')[0])
+	pop.cerateDom('videoPlayer',content);
+	var closer = pop.dom.getElementsByClassName('closer')[0];
 	trigger.addEventListener('click', function(){
 		pop.show();
 	})
 	closer.addEventListener('click', function(){
 		pop.remove();
 	})
-	console.log(pop.dom)
-	console.log(trigger)
+ };
+ //弹窗登录组件
+ function checkCookie(cookieStr){
+ 	var cookies = document.cookie;
+	var reg = new RegExp("(\\s|^)" + cookieStr + "(;|$)");
+	if(reg.test(cookies)){
+		return true;
+	}
+	return false;
  }
+ function PopLogin(){
+ 	this.setTrriger = function(){
+ 		var dom = document.getElementsByClassName('follow')[0];
+ 		dom.innerHTML = '<div class="button">关注</div>\
+ 			<span>粉丝</span>\
+			<span>45</span>';
+		this.trigger = dom.children[0];
+		console.log(this.trigger)
+ 	}
+ 	this.setCookie = function(str){
+ 		document.cookie=encodeURIComponent(str) + "=" + 
+										encodeURIComponent("1");
+	};
+	this.login = function(username, password){
+		var xhr = new XMLHttpRequest();
+		var url = 'http://study.163.com/webDev/login.htm?userName=' + 
+							username + '&password=' + password;
+		xhr.open('get', url, true);
+		xhr.send(null);
+		var loginObj = this;
+		var button = this.dom.getElementsByClassName('submit')[0];
+		xhr.onreadystatechange = function(){
+			if(xhr.readyState === 4){
+				if((xhr.status >= 200 && xhr.status <300) || xhr.status === 304){
+					var data = xhr.responseText;
+					if (data == 0) {
+						console.log('登录失败')
+						button.classList.remove('disabled');
+						button.disabled = '';
+						button.style.cursor = 'pointer';
+						;
+					}
+					if(data == 1){
+						console.log('登录成功');
+						loginObj.setCookie('loginSuc');
+						loginObj.follow();
+						loginObj.remove();
+					}
+				}
+			}
+		}
+	}
+	this.follow = function(){
+		var dom = this.trigger.parentNode;
+		console.log('followed');
+		console.log(this.trigger.parentNode);
+		dom.innerHTML = '<span class="spa">已关注</span>\n<span>|</span>\n<a href="#">取消</a>';
+		dom.className = 'followed';
+		this.setCookie('followSuc');
+	}
+ };
+ PopLogin.prototype = new Pop();
+ PopLogin.int = function(){
+ 	var dom = document.getElementsByClassName('follow')[0]
+ 	if(checkCookie('followSuc=1')){
+ 		dom.innerHTML = '<span class="spa">已关注</span>\n<span>|</span>\n<a href="#">取消</a>';
+		dom.className = 'followed';
+ 	} else{
+ 		var pop = new PopLogin();
+ 		pop.setTrriger();
+ 		console.log(pop.trigger)
+	 	var container = document.getElementsByClassName('container')[0];
+	 	var content = '<div class="formDiv">\
+	 		<form action="">\
+	 		<legend>登录网易云课堂</legend>\
+	 		<input type="text" value="账号" class="username"><br>\
+	 		<input type="text" value="密码" class="password"><br>\
+	 		<input type="button" value="登录" class="submit">\
+	 		<div class="closer"></div>\
+	 		</form>\
+	 		</div>';
+	 	pop.cerateDom('m-login', content);
+		pop.setParentNode(container);
+		var closer = pop.dom.getElementsByClassName('closer')[0];
+		pop.trigger.addEventListener('click', function(){
+		 	if (!checkCookie('loginSuc=1')) {
+				pop.show();
+				closer.addEventListener('click', function(){
+					pop.remove();
+				})
+				var usernameDom = pop.dom.getElementsByClassName('username')[0];
+				var passwordDom = pop.dom.getElementsByClassName('password')[0];
+				usernameDom.addEventListener('focus',function(){
+					if(this.value === '账号'){
+						this.value = '';
+					}
+				})
+				usernameDom.addEventListener('focusout',function(){
+					if(this.value === ''){
+						this.value = '账号';
+					}
+				})
+				passwordDom.addEventListener('focus',function(){
+					if(this.value === "密码") {
+						this.value = '';
+						this.type = 'password';
+					}
+				})
+				passwordDom.addEventListener('focusout',function(){
+					if(this.value === ''){
+						this.type = 'text';
+						this.value = '密码';
+					}
+				})
+				var button = pop.dom.getElementsByClassName('submit')[0];
+				button.addEventListener('click', function(){
+					this.disabled = 'disabled';
+					this.style.cursor = 'default';
+					this.classList.add('disabled');
+					pop.login(md5(usernameDom.value), md5(passwordDom.value));
+				})
+			}
+		})
+ 	}
+ };
+
  //注册
  window['PopVideo'] = PopVideo;
+ window['PopLogin'] = PopLogin;
+})()
+
+//最热排行
+;(function(){
+	//创建一个简单队列类，实现先进先出
+	
 })()
 
 //初始化页面
@@ -274,6 +409,7 @@
 	Slider.int();
 	Notify.int();
 	PopVideo.int();
+	PopLogin.int();
 })
 })()
 

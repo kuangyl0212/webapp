@@ -35,9 +35,14 @@
 .m-nav .split{width: 1px;height: 18px;background: #39a030;}
 .m-nav #name{margin-right: 30px;font: 22px/1 "Microsoft YaHei", serif;color: #333;}
 .m-nav .button{margin-right: 13px;padding-left:20px;width: 54px;height: 21px;box-sizing: border-box;border: 0;border-radius: 1px;color: #fff;font: 12px/21px simsun;background:url(../img/bg.png) 9px -24px no-repeat, #21a557;cursor: pointer;}
-.m-nav .follow{font-size: 12px;font-family: simsun;}
+.m-nav .follow{font-size: 12px;font-family: simsun;vertical-align: middle;}
 .m-nav .follow button:hover{background: url(../img/bg.png) 9px -24px no-repeat, #2fb556;}
 .m-nav .follow span{color: #666;}
+.m-nav .followed{width: 106px;height: 21px;border: 1px solid #efefef;border-radius: 1px;box-sizing: border-box;font: 12px/21px simsun;vertical-align: middle;color: #999;background: url(../img/bg.png) 6px -750px no-repeat,#f8f8f8;}
+.m-nav .followed .spa{padding-left: 22px;color: #333;}
+.m-nav .followed a{text-decoration: none;color: #999;}
+.m-nav .followed a:hover{text-decoration: underline;color: #21a557;}
+.m-nav .followed a:hover #special{background: background: #fff;}
 .m-nav ul a{font-size: 16px;font-family: "Microsoft YaHei";text-decoration: none;color: #666;}
 .m-nav ul a:hover{color: #39a030;}
 .m-nav #search{width: 19px;height: 19px;margin-top: 35px;background: url(../img/bg.png) 0 -62px no-repeat;cursor: pointer;}
@@ -133,6 +138,7 @@
 .m-login input{width: 295px;height: 45px;box-sizing: border-box;vertical-align: middle;}
 .m-login .username, .password{margin-bottom: 15px;padding-left:10px;border: 1px solid #dfdfdf;font: 16px/45px "Microsoft YaHei";color: #ccc;background: #fafafa;}
 .m-login .submit{margin-top:15px;border: 0;font: bold 16px/45px "Microsoft YaHei";color: #fff;background: url(../img/bg.png) repeat-x 0 -605px;cursor: pointer;}
+.m-login .disabled{background: #ccc;}
 .m-login .closer{position: absolute;top: 0; right: 0;width: 23px; height: 22px; background: url(../img/bg.png) no-repeat 0 -659px;cursor: pointer;}
 
 /*视频弹窗*/
