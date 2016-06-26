@@ -77,24 +77,25 @@
 .m-courList .side{position: absolute;top: 84px;right: 206px;width: 223px;}
 .m-courList .main{position: relative;padding: 84px 223px 51px 0;box-sizing: border-box;}
 .m-courList .main .tabs{width: 400px;height: 50px;margin-bottom: 30px;box-shadow: -1px 1px 0 #ecebeb, 0 1px #ecebeb, 1px 1px 0 #ecebeb;;text-align: center;}
-.m-courList .main .tab{float: left;width: 200px;height: 50px;font:20px/50px "Microsoft YaHei";color: #666;background: #fff;}
-.m-courList .tabs .active{color: #fff;background: #39a030;}
+.m-courList .main .tab{float: left;width: 200px;height: 50px;font:20px/50px "Microsoft YaHei";color: #666;background: #fff;cursor: pointer;}
+.m-courList .tabs .active{color: #fff;background: #39a030;cursor: default;}
 .m-courList .course .row{font-size: 0;}
 .m-courList .course .cell{display: inline-block;margin: 0 20px 26px 0;width: 225px;height: 230px;background: #fff;box-shadow: -1px 1px 0 #ecebeb, 0 1px #ecebeb, 1px 1px 0 #ecebeb;}
 .m-courList .course .cell:hover{box-shadow: -1px 1px 0 #e6e6e6, 0 1px #e6e6e6, 1px 1px 0 #e6e6e6;}
 .m-courList .course .cell:hover .tit{color: #39a030;}
-.m-courList .course img{margin:1px 1px 0;}
+.m-courList .course img{margin:1px 1px 0;width: 223px; height: 124px;}
 .m-courList .course h4{text-overflow: ellipsis;white-space: nowrap;overflow: hidden;color: #333;text-decoration: none;}
 .m-courList .course h4, p{margin: 10px 5px;font: 12px/1 "Microsoft YaHei";}
 .m-courList .course .author, .user{color: #999;}
-.m-courList .course .user{padding-left: 15px;line-height: 18px;18px;background: url(../img/bg.png) 0 -582px no-repeat;}
+.m-courList .course .user{display: inline-block;padding: 0 5px 0 15px;line-height: 18px;18px;border: 1px solid #ddd;border-radius: 1px;background: url(../img/bg.png) 0 -582px no-repeat;}
 .m-courList .course .price{color: #ff3f00;font-weight: bold;}
-.m-courList .main .turner{position: absolute;display: inline-block;bottom: 0;right: 243px;width: 302px;height: 20px;text-align: right;vertical-align: middle;font: 14px/20px "Microsoft YaHei";}
+.m-courList .main .turner{position: absolute;display: inline-block;bottom: 40px;right: 243px;height: 20px;text-align: center;vertical-align: middle;font: 14px/20px "Microsoft YaHei";}
 .m-courList .main .turner .last, .next{width: 30px;height: 20px;cursor: pointer;}
-.m-courList .turner .last{background: url(../img/bg.png) 10px -515px no-repeat,#9dd8b1;}
-.m-courList .turner .next{background: url(../img/bg.png) 10px -549px no-repeat,#9dd8b1;}
-.m-courList .turner div, ul, li{display: inline-block;vertical-align: middle;}
-.m-courList .turner li{width: 20px;height: 20px;text-align: center;color: #666;cursor: pointer;}
+.m-courList .turner .last{display: inline-block;background: url(../img/bg.png) 10px -515px no-repeat,#9dd8b1;}
+.m-courList .turner .next{display: inline-block;background: url(../img/bg.png) 10px -549px no-repeat,#9dd8b1;}
+/*.m-courList .turner div, ul, li{display: inline-block;}*/
+.m-courList .turner ul{display: inline-block;}
+.m-courList .turner li{display: inline-block;width: 20px;height: 20px;text-align: center;color: #666;cursor: pointer;}
 .m-courList .turner li:hover{color: #fff;background: #9dd8b1;}
 .m-courList .turner .active{color: #39a030;}
 .m-courList .introduce, .rank{margin-bottom: 21px;box-shadow: -1px 1px 0 #ecebeb, 0 1px #ecebeb, 1px 1px 0 #ecebeb;background: #fff}
