@@ -500,48 +500,6 @@ function ajax(method, url, data, successfn) {
 		}
 	}
 	Courses.prototype = {
-		// renderDom : function(type, pageNo, psize){
-		// 	var cour = this;
-		// 	var xhr = new XMLHttpRequest();
-		// 	cour.list.setAttribute('type', type);
-		// 	this.list.innerHTML = '';
-		// 	xhr.open('get', ('http://study.163.com/webDev/couresByCategory.htm?pageNo=' + pageNo + '&psize=' + psize + '&type=' + type), true)
-		// 	xhr.send(null);
-		// 	xhr.onreadystatechange = function(){
-		// 		if(xhr.readyState === 4){
-		// 			if((xhr.status >= 200 && xhr.status <300) || xhr.status === 304){
-		// 				var data = JSON.parse(xhr.responseText);
-		// 				cour.totalCount = data.totalCount;
-		// 				for (var i = 0; i < data.list.length; i++) {
-		// 					cour.list.innerHTML += '<div class="cell">\
-		// 						<img src=' + data.list[i].bigPhotoUrl + '>\
-		// 						<a href="#"><h4 class="tit">' + data.list[i].name +'</h4></a>\
-		// 						<p class="author">' + data.list[i].provider + '</p>\
-		// 						<p class="user">' + data.list[i].learnerCount + '</p>\
-		// 						<p class="price">￥' + data.list[i].price + '</p>\
-		// 					</div>'
-		// 				}
-		// 				var totalPageCount = data.pagination.totlePageCount;
-		// 				var turnerUl = cour.turner.getElementsByTagName('ul')[0];
-		// 				console.log(totalPageCount)
-		// 				turnerUl.innerHTML = '';
-		// 				for (var i =0;i < totalPageCount; i++){
-		// 					var li = document.createElement('li');
-		// 					li.textContent = i + 1;
-		// 					li.setAttribute('pageno', i + 1);
-		// 					turnerUl.appendChild(li);console.log(li)
-		// 					attachEventListener(li, 'click', function(){
-		// 						console.log(this)
-		// 						cour.renderList(cour.list.getAttribute('type'), this.getAttribute('pageno'), 20);
-		// 						this.className = 'active'
-		// 					})
-		// 				}
-		// 				console.log(data)
-		// 			}else{console.log('faild')}
-		// 		}
-		// 	}
-		// 	console.log('getData')
-		// },
 		setPostData : function(){
 			this.config.postData = 'type=' + this.config.type + 
 				'&pageNo=' + this.config.currentPage +
@@ -561,7 +519,7 @@ function ajax(method, url, data, successfn) {
 			this.config.totalPage = count;
 		},
 		setCurrentPage : function(page){
-			this.config.currentPage = page;
+			this.config.currentPage = parseInt(page);
 		},
 		renderTabs : function(){
 			var _this_ = this;
@@ -608,8 +566,8 @@ function ajax(method, url, data, successfn) {
 				})
 			};
 			var reTurner = function(){
-				console.log(_this_.config.curr)
-				var pageno = event.target.textContent;
+				var pageno = event.target.textContent || (_this_.config.currentPage - 1);
+				console.log(pageno)
 				if(pageno < (_this_.config.totalPage)){
 						turnerUl.innerHTML = '';
 						var span = document.createElement('span');
@@ -636,7 +594,7 @@ function ajax(method, url, data, successfn) {
 					attachEventListener(turnerUl.children[1],'click', reverse);
 			}
 			var reverse = function(){
-				var pageno = event.target.textContent;
+				var pageno = event.target.textContent || (_this_.config.currentPage + 1);
 				console.log('reverse');
 				turnerUl.innerHTML = '';
 				if((pageno - 1) > 1){
@@ -670,27 +628,52 @@ function ajax(method, url, data, successfn) {
 					reTurner();
 				}
 			};
-			function extendClick(){
-				var pageno = event.target.textContent;
-				if(pageno < 10) {
-					clickHandler()
-				} else {
-					turnerUl.innerHTML = '';
-					var span = document.createElement('span');
-					span.textContent = '...';
-					turnerUl.appendChild(span);
-					for (var i = pageno - 7; i <= parseInt(pageno) + 1; i++) {
-						var li = document.createElement('li');
-						li.textContent = i;
-						li.setAttribute('pageno', i + 1);
-						attachEventListener(li, 'click', extendClick);
-						turnerUl.appendChild(li);
+			function nextHandler(){
+				if((_this_.config.currentPage + 1) <= _this_.config.totalPage){
+					_this_.config.currentPage += 1;
+					_this_.setPostData()
+					ajax('get',_this_.config.url,_this_.config.postData,function(text){
+						var data = JSON.parse(text);
+						_this_.renderList(data);
+					})
+					//刷新翻页器
+					var lis = turnerUl.querySelectorAll('li');
+					var lim = turnerUl.querySelectorAll('li')[9].textContent;
+					if (_this_.config.currentPage > lim) {
+						reTurner();
+					} else {
+						for (var i = 0; i < lis.length; i++) {
+							lis[i].className = ''
+							if (lis[i].textContent == _this_.config.currentPage) {
+								lis[i].className = 'active'
+							}
+						}
 					}
-					var span = document.createElement('span');
-					span.textContent = '...';
-					turnerUl.appendChild(span);
 				}
-				
+				console.log(_this_.config.currentPage)
+			};
+			function lastHandler(){
+				if((_this_.config.currentPage - 1) >= 1){
+					_this_.config.currentPage -= 1;
+					_this_.setPostData()
+					ajax('get',_this_.config.url,_this_.config.postData,function(text){
+						var data = JSON.parse(text);
+						_this_.renderList(data);
+					})
+					//刷新翻页器
+					var lis = turnerUl.querySelectorAll('li');
+					var lim = turnerUl.querySelector('li').textContent;
+					if (_this_.config.currentPage < lim) {
+						reverse();
+					} else {
+						for (var i = 0; i < lis.length; i++) {
+							lis[i].className = ''
+							if (lis[i].textContent == _this_.config.currentPage) {
+								lis[i].className = 'active'
+							}
+						}
+					}
+				}
 			}
 			var totalPageCount = data.pagination.totlePageCount;
 			var turnerUl = this.turnerDom.getElementsByTagName('ul')[0];
@@ -716,6 +699,10 @@ function ajax(method, url, data, successfn) {
 				turnerUl.appendChild(span);
 			}
 			turnerUl.children[0].className = 'active';
+			var next = _this_.turnerDom.querySelector('.next');
+			var last = _this_.turnerDom.querySelector('.last');
+			attachEventListener(next,'click',nextHandler)
+			attachEventListener(last,'click',lastHandler)
 		},
 	}
 	Courses.int = function(){
@@ -738,11 +725,6 @@ function ajax(method, url, data, successfn) {
 	window['Courses'] = Courses;
 })()
 
-//初始化页面
-// window.onload = function(){
-//   Slider.int();
-//   Notify.int();
-// }
 ;(function(){
 	if (/MSIE\s8.0/g.test(navigator.appVersion)){
 		window.onload = function(){
@@ -754,26 +736,13 @@ function ajax(method, url, data, successfn) {
 		}
 	} else{
 		attachEventListener(document, "DOMContentLoaded", function(){
-	Slider.int();
-	Notify.int();
-	Courses.int();
-	HotList.int();
-	PopVideo.int();
-	PopLogin.int();
-})
+			Slider.int();
+			Notify.int();
+			Courses.int();
+			HotList.int();
+			PopVideo.int();
+			PopLogin.int();
+		})
 	}
 	
 })()
-
-// var xhr = new XMLHttpRequest();
-// xhr.open('get', 'http://study.163.com/webDev/couresByCategory.htm?pageNo=28&psize=20&type=10', true);
-
-// xhr.send("")
-// xhr.onreadystatechange = function(){
-// 	if(xhr.readyState === 4){
-// 		if((xhr.status >= 200 && xhr.status <300) || xhr.status === 304){
-// 			var data = JSON.parse(xhr.responseText)
-// 			console.log(data)
-// 		}else{console.log('faild')}
-// 	}
-// }
