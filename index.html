@@ -5,14 +5,11 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
 	<link rel="stylesheet" href="src/css/cssreset.css">
   <link rel="stylesheet" href="src/css/main.css">
-	<script src="src/js/main.js" charset="utf-8"></script>
+  <script type="text/javascript" src="src/js/md5.js"></script>
+	<script type="text/javascript" src="src/js/main.js"></script>
 </head>
 <body>
 <div class="container">
-	<div class="m-noti">
-		<div class="closer">不再提醒</div>
-		<p>网易云课堂微专业，帮助你掌握专业技能，令你求职或加薪多一份独特优势！<a href="">立即查看&gt;</a></p>
-	</div>
 	<div class="m-nav">
 		<!-- logo -->
 		<div class="logo"><div id="edu">EDU</div>
@@ -20,9 +17,9 @@
 		<div id="name">网易教育产品部</div>
 	</div>
 		<!-- follow -->
-		<div class="follow">
-			<button>关注</button><span>粉丝</span>
-			<span>45</span>
+		<div class="follow" id="special">
+			<!-- <div class="button">关注</div><span>粉丝</span>
+			<span>45</span> -->
 		</div>
 		<!-- list -->
 		<div class="link">
@@ -46,7 +43,7 @@
 						<div class="description">
 							<h3>网易公开课</h3>
 							<p>推出国内外名校公开课，涉及广泛的学科，名校老师认真讲解深度剖析，网易视频公开课频道搭建强有力的网络视频教学平台。</p>
-							<a href="http://open.163.com/">了解更多></a>
+							<a href="http://open.163.com/">了解更多&gt;</a>
 						</div>
 					</div>
 					<div class="product" id="prod2">
@@ -54,7 +51,7 @@
 						<div class="description">
 							<h3>云课堂</h3>
 							<p>网易旗下大型在线学习平台，该平台面向学习者提供海量免费、优质课程，创新的个性化学习体验，自由开放的交流互动环境。</p>
-							<a href="http://study.163.com/">了解更多></a>
+							<a href="http://study.163.com/">了解更多&gt;</a>
 						</div>
 					</div>
 					<div class="product" id="prod3">
@@ -62,7 +59,7 @@
 						<div class="description">
 							<h3>网易公开课</h3>
 							<p>推出国内外名校公开课，涉及广泛的学科，名校老师认真讲解深度剖析，网易视频公开课频道搭建强有力的网络视频教学平台。</p>
-							<a href="http://www.icourse163.org/">了解更多></a>
+							<a href="http://www.icourse163.org/">了解更多&gt;</a>
 						</div>
 					</div>
 		</div>
@@ -74,10 +71,10 @@
 	<div class="m-courList">
 		<div class="main">
 			<!-- tab -->
-			<div class="tabs"><div class="tab active">产品设计</div><div class="tab">编程语言</div></div>
+			<div class="tabs"><div type="10" class="tab active">产品设计</div><div type="20" class="tab">编程语言</div></div>
 			<!-- 列表 -->
 			<div class="course">
-				<div class="row">
+				<!-- <div class="row">
 					<div class="cell">
 						<img src="src/img/python.jpg" alt="">
 						<a href="#"><h4 class="tit">混音全揭秘 舞曲实战篇 揭秘音乐 揭秘音乐 揭秘音乐</h4></a>
@@ -113,20 +110,13 @@
 						<p class="user">510</p>
 						<p class="price">￥800.00</p>
 					</div>
-				</div>
+				</div> -->
 			</div>
 			<!-- 翻页器 -->
 			<div class="turner">
 				<div class="last"></div>
 				<ul>
-					<li>1</li>
-					<li>2</li>
-					<li>3</li>
-					<li>4</li>
-					<li class="active">5</li>
-					<li>6</li>
-					<li>7</li>
-					<li>8</li>
+					
 				</ul>
 				<div class="next"></div>
 			</div>
@@ -137,63 +127,13 @@
 				<div class="title">机构介绍</div>
 				<div class="video">
 					<p>观看下面的视频来了解吧：</p>
-					<img src="src/img/vedio.jpg" alt="" />
+					<img src="src/img/video.jpg" alt="" />
 				</div>
 			</div>
 			<!-- 最热排行 -->
 			<div class="rank">
 				<div class="title">最热排行</div>
 				<ul>
-					<li>
-						<img src="src/img/rank.jpg" alt="">
-						<h4>舞团揭秘音乐揭秘舞团揭秘音乐揭秘</h4>
-						<p>21567</p>
-					</li>
-					<li>
-						<img src="src/img/rank.jpg" alt="">
-						<h4>舞团揭秘音乐揭秘舞团揭秘音乐揭秘</h4>
-						<p>21567</p>
-					</li>
-					<li>
-						<img src="src/img/rank.jpg" alt="">
-						<h4>舞团揭秘音乐揭秘舞团揭秘音乐揭秘</h4>
-						<p>21567</p>
-					</li>
-					<li>
-						<img src="src/img/rank.jpg" alt="">
-						<h4>舞团揭秘音乐揭秘舞团揭秘音乐揭秘</h4>
-						<p>21567</p>
-					</li>
-					<li>
-						<img src="src/img/rank.jpg" alt="">
-						<h4>舞团揭秘音乐揭秘舞团揭秘音乐揭秘</h4>
-						<p>21567</p>
-					</li>
-					<li>
-						<img src="src/img/rank.jpg" alt="">
-						<h4>舞团揭秘音乐揭秘舞团揭秘音乐揭秘</h4>
-						<p>21567</p>
-					</li>
-					<li>
-						<img src="src/img/rank.jpg" alt="">
-						<h4>舞团揭秘音乐揭秘舞团揭秘音乐揭秘</h4>
-						<p>21567</p>
-					</li>
-					<li>
-						<img src="src/img/rank.jpg" alt="">
-						<h4>舞团揭秘音乐揭秘舞团揭秘音乐揭秘</h4>
-						<p>21567</p>
-					</li>
-					<li>
-						<img src="src/img/rank.jpg" alt="">
-						<h4>舞团揭秘音乐揭秘舞团揭秘音乐揭秘</h4>
-						<p>21567</p>
-					</li>
-					<li>
-						<img src="src/img/rank.jpg" alt="">
-						<h4>舞团揭秘音乐揭秘舞团揭秘音乐揭秘</h4>
-						<p>21567</p>
-					</li>
 				</ul>
 			</div>
 		</div>
