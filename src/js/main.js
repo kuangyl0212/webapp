@@ -1,10 +1,39 @@
 //兼容补丁
-function attachEventListener(ele, eve, fun){
-	if ((typeof addEventListener) == 'function') {
-		return ele.addEventListener(eve, fun, false);
-	} else {
-		return ele.attachEvent(('on' + eve), fun)
+
+var attachEventListener = (function(){
+	if(document.addEventListener){
+		return function(el,type,fn){
+			if(el.length){
+				for(var i=0;i<el.length;i++){
+					attachEventListener(el[i],type,fn);
+				}
+			}else{
+				el.addEventListener(type,fn,false);
+			}
+		};
+	}else{
+	return function(el,type,fn){
+		if(el.length){
+			for(var i=0;i<el.length;i++){
+				attachEventListener(el[i],type,fn);
+			}
+		}else{
+			el.attachEvent('on'+type,function(){
+				return fn.call(el,window.event);
+			});
+		}
+	};
 	}
+})()
+function getCurrentStyle(node) {
+    var style = null;
+    
+    if(window.getComputedStyle) {
+        style = window.getComputedStyle(node, null);
+    }else{
+        style = node.currentStyle;
+    }
+    return style;
 }
 
 //ajax封装
@@ -506,7 +535,7 @@ function ajax(method, url, data, successfn) {
 				'&psize=' + this.config.psize;
 		},
 		setPsize : function(){
-			if (screen.width > 960) {
+			if (window.innerWidth > 1208) {
 				this.config.psize = 20;
 			} else {
 				this.config.psize = 15;
@@ -726,23 +755,33 @@ function ajax(method, url, data, successfn) {
 })()
 
 ;(function(){
-	if (/MSIE\s8.0/g.test(navigator.appVersion)){
-		window.onload = function(){
-			Slider.int();
-			Notify.int();
-			PopVideo.int();
-			PopLogin.int();
-			HotList.int();
+	function layoutFix(){
+		var body = document.querySelector('body');
+		var dom = document.querySelector('.layoutFix');
+		console.log(dom)
+		function fix(){
+			var width = body.clientWidth;
+			if(width > 960){
+					dom.style.width = width + 'px';
+			} else {
+					dom.style.width = '960px';
+			}
 		}
-	} else{
-		attachEventListener(document, "DOMContentLoaded", function(){
-			Slider.int();
-			Notify.int();
-			Courses.int();
-			HotList.int();
-			PopVideo.int();
-			PopLogin.int();
-		})
+		fix();
+		attachEventListener(window,'resize',fix)
 	}
-	
+	var loadHandler = function(){
+		Slider.int();
+		Notify.int();
+		PopVideo.int();
+		PopLogin.int();
+		HotList.int();
+		Courses.int();
+		layoutFix();
+	}
+	if (/MSIE\s8.0/g.test(navigator.appVersion)){
+		attachEventListener(window,'load',loadHandler)
+	} else{
+		attachEventListener(document, "DOMContentLoaded", loadHandler)
+	}
 })()
