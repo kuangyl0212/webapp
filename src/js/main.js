@@ -27,7 +27,6 @@ var attachEventListener = (function(){
 })()
 function getCurrentStyle(node) {
     var style = null;
-    
     if(window.getComputedStyle) {
         style = window.getComputedStyle(node, null);
     }else{
@@ -64,9 +63,6 @@ function ajax(method, url, data, successfn) {
 		}
 	}
 } 
-// ajax('get', 'http://study.163.com/webDev/hotcouresByCategory.htm', '', function(data){
-// 	console.log(data)
-// })
 
 /**
  * 通知条
@@ -305,9 +301,18 @@ function ajax(method, url, data, successfn) {
  	},
  	show : function(){
  		this.parentNode.appendChild(this.dom);
+ 		var pop = this.dom.children[0];
+ 		var body = document.querySelector('body');
+ 		body.style.overflowY = 'hidden';
+ 		if (/MSIE\s8.0/g.test(navigator.appVersion)){
+ 			pop.style.marginLeft = (-pop.clientWidth/2) + 'px';
+ 			pop.style.marginTop = (-pop.clientHeight/2) + 'px';
+ 		}
  	},
  	remove : function(){
  		this.parentNode.removeChild(this.dom);
+ 		var body = document.querySelector('body');
+ 		body.style.overflowY = '';
  	},
  };
  //弹窗视频类
@@ -328,9 +333,9 @@ function ajax(method, url, data, successfn) {
 	attachEventListener(trigger, 'click', function(){
 		pop.show();
 	})
-	attachEventListener(closer, 'click', function(){
+	closer.onclick = function(){
 		pop.remove();
-	})
+	}
  };
  //弹窗登录组件
  function checkCookie(cookieStr){
@@ -387,7 +392,6 @@ function ajax(method, url, data, successfn) {
  	} else{
  		var pop = new PopLogin();
  		pop.setTrriger();
-	 	var container = document.querySelector('.container');
 	 	var content = '<div class="formDiv">\
 	 		<form action="">\
 	 		<legend>登录网易云课堂</legend>\
@@ -398,14 +402,14 @@ function ajax(method, url, data, successfn) {
 	 		</form>\
 	 		</div>';
 	 	pop.cerateDom('m-login', content);
-		pop.setParentNode(container);
+		pop.setParentNode(document.querySelector('.container'));
 		var closer = pop.dom.querySelector('.closer');
 		attachEventListener(pop.trigger, 'click', function(){
 		 	if (!checkCookie('loginSuc=1')) {
 				pop.show();
-				attachEventListener(closer, 'click', function(){
+				closer.onclick = function(){
 					pop.remove();
-				})
+				}
 				var usernameDom = pop.dom.querySelector('.username');
 				var passwordDom = pop.dom.querySelector('.password');
 				attachEventListener(usernameDom, 'focus',function(){
@@ -635,16 +639,22 @@ function ajax(method, url, data, successfn) {
 			//渲染课程列表
 			var render = function(){
 				var target = event.target || event.srcElement;
-				for (var i = 0; i < target.parentNode.children.length; i++) {
-					target.parentNode.children[i].className = '';
+				var parentNode = _this_.turnerDom.querySelector('ul');
+				console.log(target)
+				for (var i = 0; i < parentNode.children.length; i++) {
+					parentNode.children[i].className = '';
 				}
-				target.className = 'active';
-				_this_.setCurrentPage(target.innerHTML);
+				_this_.setCurrentPage(target.innerHTML || target.pageno);
 				_this_.setPostData()
 				ajax('get',_this_.config.url,_this_.config.postData,function(text){
 					var data = JSON.parse(text);
 					_this_.renderList(data);
 				})
+				for (var i = 0; i < parentNode.children.length; i++) {
+					if(parentNode.children[i].innerHTML == _this_.config.currentPage){
+						parentNode.children[i].className = 'active'
+					};
+				}
 			};
 			//重新渲染翻页器
 			var reTurner = function(){
@@ -665,16 +675,16 @@ function ajax(method, url, data, successfn) {
 							}
 							turnerUl.appendChild(li);
 						}
-						if (!(turnerUl.lastElementChild.innerHTML == _this_.config.totalPage)) {
+						if (!(turnerUl.lastChild.innerHTML == _this_.config.totalPage)) {
 							var span = document.createElement('span');
 							span.innerHTML = '...';
 							turnerUl.appendChild(span);
 						}
 					}
-					attachEventListener(turnerUl.children[10],'click',reTurner);
-					attachEventListener(turnerUl.children[1],'click', reverse);
+					turnerUl.children[10].onclick = reTurner;
+					turnerUl.children[1].onclick = reverse;
 			}
-			//反向渲染
+			//反向渲染翻页器
 			var reverse = function(){
 				var target = event.target || event.srcElement;
 				var pageno = target.innerHTML || (_this_.config.currentPage + 1);
@@ -802,7 +812,6 @@ function ajax(method, url, data, successfn) {
 			cour.renderTurner(data);
 		})
 	}
-
 	window['Courses'] = Courses;
 })()
 
@@ -813,26 +822,21 @@ function ajax(method, url, data, successfn) {
 		var container = document.querySelector('.container');
 		var img1 = document.querySelector('.m-slider').querySelector('.image');
 		var img2 = document.querySelector('.workEnv').querySelector('.image');
-		
-		
-		// console.log(container.offsetLeft)
 		function fix(){
 			var width = body.clientWidth;
 			if(width > 960){
 				if (/MSIE\s8.0/g.test(navigator.appVersion)){
 					container.style.width = '1208px';
-					if (width > 1616) {
-						img2.style.marginLeft = (-(1616 - 1208)/2) + 'px';
-						if (width > 1652) {
-							img1.style.marginLeft = (-(1652 - 1208)/2) + 'px';
-						}
-					}
+					img2.style.marginLeft = (-(1616 - 1208)/2) + 'px';
+					 img1.style.marginLeft = (-(1652 - 1208)/2) + 'px';
  				};
 				dom.style.width = width + 'px';
 			} else {
 				dom.style.width = '960px';
 				if (/MSIE\s8.0/g.test(navigator.appVersion)){
 					container.style.width = '960px';
+					img1.style.marginLeft = (-(1652 - 960)/2) + 'px';
+					img2.style.marginLeft = (-(1616 - 960)/2) + 'px';
 				};
 			}
 		}
