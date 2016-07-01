@@ -73,6 +73,11 @@ function ajax(method, url, data, successfn) {
  * 点击“ X 不再提醒”后，刷新页面不再出现
  */
 ;(function(){
+	//页面背景补丁
+	function bgFix(){
+		var dom = document.querySelector('.layoutFix');
+		dom.style.backgroundPositionY = '-36px';
+	}
 	//设置和检查cooki设置成外部函数，如果已经设置了不再显示，则不需要实例化noti类
 	function checkCookie(){
 		var cookies = document.cookie;
@@ -111,6 +116,7 @@ function ajax(method, url, data, successfn) {
 		close : function(parentNode, node){
 			//从页面中删除节点
 			parentNode.removeChild(node);
+			
 		}
 	};
 	Notify.int = function(str){
@@ -118,24 +124,17 @@ function ajax(method, url, data, successfn) {
 			var a = new Notify(str);
 			attachEventListener(a.closer, 'click', function(){
 				a.close(a.parentNode, a.dom);
+				bgFix();
 				a.setCookie();
 			})
 			a.show();
-
+		} else {
+			bgFix();
 		}
 	};
 	window['Notify'] = Notify;
 })()
 
-/**
- * 轮播
- * 三张轮播图轮播效果： 实现每 5s 切换图片，图片循环播放；鼠标悬停某张图片，则暂停切换；
- * 切换效果使用入场图片 500ms 淡入的方式。
- * 点击后新开窗口打开目的页面，对应的跳转链接如下，
- * banner1： http://open.163.com/
- * banner2： http://study.163.com/
- * banner3： http://www.icourse163.org/
- */
 /**
  * 说明：
  * 轮播的设置通过修改html文档中的m-slider类节点的data-setting属性来修改
@@ -270,7 +269,8 @@ function ajax(method, url, data, successfn) {
   		//给小圆点绑定点击事件
   		for (var i = 0; i < a.pointers.children.length; i++) {
   			attachEventListener(a.pointers.children[i], 'click',function(){
-  				var index = event.target.getAttribute('index');
+  				var target = event.target || event.srcElement;
+  				var index = target.getAttribute('index');
   				a.setIndex(index);
   				a.showImg();
   			})
@@ -515,10 +515,10 @@ function ajax(method, url, data, successfn) {
 
 ;(function(){
 	function Courses(){
-		this.dom = document.getElementsByClassName('m-courList')[0].getElementsByClassName('main')[0];
-		this.tabsDom = this.dom.getElementsByClassName('tabs')[0];
-		this.turnerDom = this.dom.getElementsByClassName('turner')[0];
-		this.listDom = this.dom.getElementsByClassName('course')[0];
+		this.dom = document.querySelector('.m-courList').querySelector('.main');
+		this.tabsDom = this.dom.querySelector('.tabs');
+		this.turnerDom = this.dom.querySelector('.turner');
+		this.listDom = this.dom.querySelector('.course');
 		this.config = {
 			url : 'http://study.163.com/webDev/couresByCategory.htm',
 			postData : undefined,
@@ -535,11 +535,24 @@ function ajax(method, url, data, successfn) {
 				'&psize=' + this.config.psize;
 		},
 		setPsize : function(){
-			if (window.innerWidth > 1208) {
-				this.config.psize = 20;
-			} else {
-				this.config.psize = 15;
+			var _this_ = this;
+			var body = document.querySelector('body');
+			var set = function(){
+				if (body.clientWidth > 1208) {
+					_this_.config.psize = 20;
+				} else {
+					_this_.config.psize = 15;
+				}
 			}
+			set();
+			attachEventListener(window, 'resize',function(){
+				set();
+				_this_.setPostData()
+				ajax('get',_this_.config.url,_this_.config.postData,function(text){
+					var data = JSON.parse(text);
+					_this_.renderList(data);
+				})
+			})
 		},
 		setType : function(type){
 			this.config.type = type;
@@ -552,59 +565,99 @@ function ajax(method, url, data, successfn) {
 		},
 		renderTabs : function(){
 			var _this_ = this;
-			attachEventListener(this.tabsDom, 'click', function(){
-				_this_.setType(event.target.getAttribute('type'));
-				for (var i = 0; i < event.currentTarget.children.length; i++) {
-					event.currentTarget.children[i].className = 'tab';
+			var tabs = this.tabsDom.children;
+			for (var i = 0; i < tabs.length; i++) {
+				attachEventListener(tabs[i], 'click', function(){
+				var target = event.target || event.srcElement;
+				_this_.setType(target.getAttribute('type'));
+				for (var i = 0; i < tabs.length; i++) {
+					tabs[i].className = 'tab';
 				}
-				event.target.className = 'tab active';
+				target.className = 'tab active';
 				ajax('get', _this_.config.url, 'pageNo=1&psize=' +
-					_this_.config.psize + '&type='+ event.target.getAttribute('type'), function(text){
+					_this_.config.psize + '&type='+ target.getAttribute('type'), function(text){
 					var data = JSON.parse(text);
 					_this_.renderList(data);
 					_this_.renderTurner(data);
 					_this_.setTotalPage(data.totalPage);
+					_this_.setCurrentPage(1)
 				})
 				
 			})
+			}
+			
 		},
 		renderList : function(data){
+			var _this_ = this;
 			this.listDom.innerHTML = '';
 			for (var i = 0; i < data.list.length; i++) {
-				this.listDom.innerHTML += '<div class="cell">\
-					<img src=' + data.list[i].bigPhotoUrl + '>\
+				var cell = document.createElement('div');
+				cell.className = 'cell';
+				cell.setAttribute('index',i);
+				cell.innerHTML = '<img src=' + data.list[i].bigPhotoUrl + '>\
 					<a href="#"><h4 class="tit">' + data.list[i].name +'</h4></a>\
 					<p class="author">' + data.list[i].provider + '</p>\
 					<p class="user">' + data.list[i].learnerCount + '</p>\
-					<p class="price">￥' + data.list[i].price + '</p>\
-				</div>'
+					<p class="price">￥' + data.list[i].price + '</p>';
+				this.listDom.appendChild(cell);
+				attachEventListener(cell,'mouseover',function(){
+					var cell = event.currentTarget || event.srcElement;
+					var index = cell.getAttribute('index');
+					var popContent = '<div class="upper">\
+						<img src=' + data.list[index].bigPhotoUrl + '>\
+						<h4 class="tit">' + data.list[index].name +'</h4>\
+						<p class="user">' + data.list[index].learnerCount + '人在学</p>\
+						<p class="author">发布者：' + data.list[index].provider + '</p>\
+						<p class="category">分类：' + (data.list[index].categoryName || '未添加') + '</p>\
+					</div>\
+					<div class="description">' + data.list[index].description + '</div>';
+					cell.myTimer = setTimeout(function(){
+						var pop = document.createElement('div');
+						pop.innerHTML= popContent;
+						pop.className = 'pop'
+						pop.style.cssText = 'left:' + (cell.offsetLeft-10) + 'px;top:' +
+							(cell.offsetTop-10) + 'px;'
+						attachEventListener(pop,'mouseleave',function(){
+							var dom = event.currentTarget || event.srcElement;
+							dom.parentNode.removeChild(dom);
+						})
+						_this_.listDom.appendChild(pop);
+					},500)
+				})
+				attachEventListener(cell,'mouseout',function(){
+					var cell = event.currentTarget || event.srcElement;
+					clearTimeout(cell.myTimer);
+				})	
 			}
 		},
 		renderTurner : function(data){
 			var _this_ = this;
+			//渲染课程列表
 			var render = function(){
-				for (var i = 0; i < event.target.parentNode.children.length; i++) {
-					event.target.parentNode.children[i].className = '';
+				var target = event.target || event.srcElement;
+				for (var i = 0; i < target.parentNode.children.length; i++) {
+					target.parentNode.children[i].className = '';
 				}
-				event.target.className = 'active';
-				_this_.setCurrentPage(event.target.textContent);
+				target.className = 'active';
+				_this_.setCurrentPage(target.innerHTML);
 				_this_.setPostData()
 				ajax('get',_this_.config.url,_this_.config.postData,function(text){
 					var data = JSON.parse(text);
 					_this_.renderList(data);
 				})
 			};
+			//重新渲染翻页器
 			var reTurner = function(){
-				var pageno = event.target.textContent || (_this_.config.currentPage - 1);
-				console.log(pageno)
+				var target = event.target || event.srcElement;
+				var pageno = target.innerHTML || (_this_.config.currentPage - 1);
 				if(pageno < (_this_.config.totalPage)){
 						turnerUl.innerHTML = '';
 						var span = document.createElement('span');
-						span.textContent = '...';
+						span.innerHTML = '...';
 						turnerUl.appendChild(span);
 						for (var i = pageno - 8; i <= parseInt(pageno) + 1; i++) {
 							var li = document.createElement('li');
-							li.textContent = i;
+							li.innerHTML = i;
 							li.setAttribute('pageno', i);
 							attachEventListener(li, 'click', render);
 							if (i == _this_.config.currentPage) {
@@ -612,28 +665,28 @@ function ajax(method, url, data, successfn) {
 							}
 							turnerUl.appendChild(li);
 						}
-						if (!(turnerUl.lastElementChild.textContent == _this_.config.totalPage)) {
+						if (!(turnerUl.lastElementChild.innerHTML == _this_.config.totalPage)) {
 							var span = document.createElement('span');
-							span.textContent = '...';
+							span.innerHTML = '...';
 							turnerUl.appendChild(span);
 						}
 					}
-					console.log(turnerUl.children[10])
 					attachEventListener(turnerUl.children[10],'click',reTurner);
 					attachEventListener(turnerUl.children[1],'click', reverse);
 			}
+			//反向渲染
 			var reverse = function(){
-				var pageno = event.target.textContent || (_this_.config.currentPage + 1);
-				console.log('reverse');
+				var target = event.target || event.srcElement;
+				var pageno = target.innerHTML || (_this_.config.currentPage + 1);
 				turnerUl.innerHTML = '';
 				if((pageno - 1) > 1){
 					var span = document.createElement('span');
-					span.textContent = '...';
+					span.innerHTML = '...';
 					turnerUl.appendChild(span);
 				}
 				for (var i = pageno - 1; i <= parseInt(pageno) + 8; i++) {
 					var li = document.createElement('li');
-					li.textContent = i;
+					li.innerHTML = i;
 					li.setAttribute('pageno', i);
 					attachEventListener(li, 'click', render);
 					if (i == _this_.config.currentPage) {
@@ -642,14 +695,15 @@ function ajax(method, url, data, successfn) {
 					turnerUl.appendChild(li);
 				}
 				var span = document.createElement('span');
-				span.textContent = '...';
+				span.innerHTML = '...';
 				turnerUl.appendChild(span);
 				var length = turnerUl.children.length;
 				attachEventListener(turnerUl.children[(length-2)],'click',reTurner);
 				attachEventListener(turnerUl.children[1],'click', reverse);
 			}
 			function clickHandler(){
-				var pageno = event.target.textContent;
+				var target = event.target || event.srcElement
+				var pageno = target.innerHTML;
 				if(pageno < 10) {
 					render();
 				} else {
@@ -667,19 +721,18 @@ function ajax(method, url, data, successfn) {
 					})
 					//刷新翻页器
 					var lis = turnerUl.querySelectorAll('li');
-					var lim = turnerUl.querySelectorAll('li')[9].textContent;
+					var lim = turnerUl.querySelectorAll('li')[9].innerHTML;
 					if (_this_.config.currentPage > lim) {
 						reTurner();
 					} else {
 						for (var i = 0; i < lis.length; i++) {
 							lis[i].className = ''
-							if (lis[i].textContent == _this_.config.currentPage) {
+							if (lis[i].innerHTML == _this_.config.currentPage) {
 								lis[i].className = 'active'
 							}
 						}
 					}
 				}
-				console.log(_this_.config.currentPage)
 			};
 			function lastHandler(){
 				if((_this_.config.currentPage - 1) >= 1){
@@ -691,13 +744,13 @@ function ajax(method, url, data, successfn) {
 					})
 					//刷新翻页器
 					var lis = turnerUl.querySelectorAll('li');
-					var lim = turnerUl.querySelector('li').textContent;
+					var lim = turnerUl.querySelector('li').innerHTML;
 					if (_this_.config.currentPage < lim) {
 						reverse();
 					} else {
 						for (var i = 0; i < lis.length; i++) {
 							lis[i].className = ''
-							if (lis[i].textContent == _this_.config.currentPage) {
+							if (lis[i].innerHTML == _this_.config.currentPage) {
 								lis[i].className = 'active'
 							}
 						}
@@ -710,7 +763,7 @@ function ajax(method, url, data, successfn) {
 			if (totalPageCount <= 10) {
 				for (var i =0;i < totalPageCount; i++){
 					var li = document.createElement('li');
-					li.textContent = i + 1;
+					li.innerHTML = i + 1;
 					li.setAttribute('pageno', i + 1);
 					attachEventListener(li, 'click', clickHandler);
 					turnerUl.appendChild(li);
@@ -718,20 +771,20 @@ function ajax(method, url, data, successfn) {
 			} else {
 				for (var i =0;i < 10; i++){
 					var li = document.createElement('li');
-					li.textContent = i + 1;
+					li.innerHTML = i + 1;
 					li.setAttribute('pageno', i + 1);
 					attachEventListener(li, 'click', clickHandler);
 					turnerUl.appendChild(li);
 				};
 				var span = document.createElement('span');
-				span.textContent = '...';
+				span.innerHTML = '...';
 				turnerUl.appendChild(span);
 			}
 			turnerUl.children[0].className = 'active';
 			var next = _this_.turnerDom.querySelector('.next');
 			var last = _this_.turnerDom.querySelector('.last');
-			attachEventListener(next,'click',nextHandler)
-			attachEventListener(last,'click',lastHandler)
+			next.onclick = nextHandler;
+			last.onclick = lastHandler;
 		},
 	}
 	Courses.int = function(){
@@ -748,7 +801,6 @@ function ajax(method, url, data, successfn) {
 			cour.renderList(data);
 			cour.renderTurner(data);
 		})
-		console.log(cour.config)
 	}
 
 	window['Courses'] = Courses;
@@ -758,13 +810,30 @@ function ajax(method, url, data, successfn) {
 	function layoutFix(){
 		var body = document.querySelector('body');
 		var dom = document.querySelector('.layoutFix');
-		console.log(dom)
+		var container = document.querySelector('.container');
+		var img1 = document.querySelector('.m-slider').querySelector('.image');
+		var img2 = document.querySelector('.workEnv').querySelector('.image');
+		
+		
+		// console.log(container.offsetLeft)
 		function fix(){
 			var width = body.clientWidth;
 			if(width > 960){
-					dom.style.width = width + 'px';
+				if (/MSIE\s8.0/g.test(navigator.appVersion)){
+					container.style.width = '1208px';
+					if (width > 1616) {
+						img2.style.marginLeft = (-(1616 - 1208)/2) + 'px';
+						if (width > 1652) {
+							img1.style.marginLeft = (-(1652 - 1208)/2) + 'px';
+						}
+					}
+ 				};
+				dom.style.width = width + 'px';
 			} else {
-					dom.style.width = '960px';
+				dom.style.width = '960px';
+				if (/MSIE\s8.0/g.test(navigator.appVersion)){
+					container.style.width = '960px';
+				};
 			}
 		}
 		fix();
