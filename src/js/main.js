@@ -264,8 +264,7 @@ function ajax(method, url, data, successfn) {
   		a.addPointer();
   		//给小圆点绑定点击事件
   		for (var i = 0; i < a.pointers.children.length; i++) {
-  			attachEventListener(a.pointers.children[i], 'click',function(){
-  				var event = event || window.event || arguments.callee.caller.arguments[0];
+  			attachEventListener(a.pointers.children[i], 'click',function(event){
   				var target = event.target || event.srcElement;
   				var index = target.getAttribute('index');
   				a.setIndex(index);
@@ -518,6 +517,7 @@ function ajax(method, url, data, successfn) {
 	}
 })()
 
+//课程列表
 ;(function(){
 	function Courses(){
 		this.dom = document.querySelector('.m-courList').querySelector('.main');
@@ -526,7 +526,7 @@ function ajax(method, url, data, successfn) {
 		this.listDom = this.dom.querySelector('.course');
 		this.config = {
 			url : 'http://study.163.com/webDev/couresByCategory.htm',
-			postData : undefined,
+			postData : undefined, //get请求时的发送的参数
 			type : 10,
 			totalPage : undefined,
 			currentPage : 1,
@@ -590,6 +590,7 @@ function ajax(method, url, data, successfn) {
 			})
 			}
 		},
+		//渲染课程列表
 		renderList : function(data){
 			var _this_ = this;
 			this.listDom.innerHTML = '';
@@ -633,9 +634,10 @@ function ajax(method, url, data, successfn) {
 				})	
 			}
 		},
+		// 渲染翻页器
 		renderTurner : function(data){
 			var _this_ = this;
-			//渲染课程列表
+			//刷新课程列表
 			var render = function(event){
 				var target = event.target || event.srcElement || target;
 				var parentNode = _this_.turnerDom.querySelector('ul');
@@ -655,7 +657,7 @@ function ajax(method, url, data, successfn) {
 					};
 				}
 			};
-			//重新渲染翻页器
+			//刷新翻页器
 			var reTurner = function(event){
 				var target = event.target || event.srcElement;
 				var pageno = target.innerHTML || (_this_.config.currentPage - 1);
@@ -689,7 +691,7 @@ function ajax(method, url, data, successfn) {
 						reverse(event);
 					});
 			}
-			//反向渲染翻页器
+			//反向刷新翻页器
 			var reverse = function(event){
 				var target = event.target || event.srcElement;
 				var pageno = target.innerHTML || (_this_.config.currentPage + 1);
@@ -722,8 +724,8 @@ function ajax(method, url, data, successfn) {
 					reverse(event);
 				});
 			}
+			// 翻页器点击事件的处理函数
 			function clickHandler(event){
-				var event = event || window.event || arguments.callee.caller.arguments[0];
 				var target = event.target || event.srcElement;
 				var pageno = target.innerHTML;
 				if(pageno < 10) {
@@ -733,6 +735,7 @@ function ajax(method, url, data, successfn) {
 					reTurner(event);
 				}
 			};
+			// 下一页按钮的处理函数
 			function nextHandler(event){
 				if((_this_.config.currentPage + 1) <= _this_.config.totalPage){
 					_this_.config.currentPage += 1;
@@ -756,6 +759,7 @@ function ajax(method, url, data, successfn) {
 					}
 				}
 			};
+			// 上一页的处理函数
 			function lastHandler(event){
 				if((_this_.config.currentPage - 1) >= 1){
 					_this_.config.currentPage -= 1;
@@ -779,6 +783,7 @@ function ajax(method, url, data, successfn) {
 					}
 				}
 			}
+			// 渲染翻页器的逻辑
 			var totalPageCount = data.pagination.totlePageCount;
 			var turnerUl = this.turnerDom.getElementsByTagName('ul')[0];
 			turnerUl.innerHTML = '';
@@ -836,6 +841,7 @@ function ajax(method, url, data, successfn) {
 })()
 
 ;(function(){
+	// 修复布局
 	function layoutFix(){
 		var body = document.querySelector('body');
 		var dom = document.querySelector('.layoutFix');
@@ -845,11 +851,13 @@ function ajax(method, url, data, successfn) {
 		function fix(){
 			var width = body.clientWidth;
 			if(width > 960){
+				// 修复ie8不支持transform产生的布局错误
 				if (/MSIE\s8.0/g.test(navigator.appVersion)){
 					container.style.width = '1208px';
 					img2.style.marginLeft = (-(1616 - 1208)/2) + 'px';
 					 img1.style.marginLeft = (-(1652 - 1208)/2) + 'px';
  				};
+ 				// 页面溢出的修复
 				dom.style.width = width + 'px';
 			} else {
 				dom.style.width = '960px';
@@ -872,6 +880,7 @@ function ajax(method, url, data, successfn) {
 		Courses.int();
 		layoutFix();
 	}
+	// ie8中使用window loaded时初始化js代码 其他浏览器用domready
 	if (/MSIE\s8.0/g.test(navigator.appVersion)){
 		attachEventListener(window,'load',loadHandler)
 	} else{
