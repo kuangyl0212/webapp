@@ -72,7 +72,7 @@ function ajax(method, url, data, successfn) {
 	//页面背景补丁
 	function bgFix(){
 		var dom = document.querySelector('.layoutFix');
-		dom.style.backgroundPositionY = '-36px';
+		dom.style.backgroundPosition = '0 -36px';
 	}
 	//设置和检查cooki设置成外部函数，如果已经设置了不再显示，则不需要实例化noti类
 	function checkCookie(){
@@ -265,6 +265,7 @@ function ajax(method, url, data, successfn) {
   		//给小圆点绑定点击事件
   		for (var i = 0; i < a.pointers.children.length; i++) {
   			attachEventListener(a.pointers.children[i], 'click',function(){
+  				var event = event || window.event || arguments.callee.caller.arguments[0];
   				var target = event.target || event.srcElement;
   				var index = target.getAttribute('index');
   				a.setIndex(index);
@@ -572,6 +573,7 @@ function ajax(method, url, data, successfn) {
 			var tabs = this.tabsDom.children;
 			for (var i = 0; i < tabs.length; i++) {
 				attachEventListener(tabs[i], 'click', function(){
+					var event = event || window.event || arguments.callee.caller.arguments[0];
 				var target = event.target || event.srcElement;
 				_this_.setType(target.getAttribute('type'));
 				for (var i = 0; i < tabs.length; i++) {
@@ -586,10 +588,8 @@ function ajax(method, url, data, successfn) {
 					_this_.setTotalPage(data.totalPage);
 					_this_.setCurrentPage(1)
 				})
-				
 			})
 			}
-			
 		},
 		renderList : function(data){
 			var _this_ = this;
@@ -604,7 +604,7 @@ function ajax(method, url, data, successfn) {
 					<p class="user">' + data.list[i].learnerCount + '</p>\
 					<p class="price">￥' + data.list[i].price + '</p>';
 				this.listDom.appendChild(cell);
-				attachEventListener(cell,'mouseover',function(){
+				attachEventListener(cell,'mouseover',function(event){
 					var cell = event.currentTarget || event.srcElement;
 					var index = cell.getAttribute('index');
 					var popContent = '<div class="upper">\
@@ -621,14 +621,14 @@ function ajax(method, url, data, successfn) {
 						pop.className = 'pop'
 						pop.style.cssText = 'left:' + (cell.offsetLeft-10) + 'px;top:' +
 							(cell.offsetTop-10) + 'px;'
-						attachEventListener(pop,'mouseleave',function(){
+						attachEventListener(pop,'mouseleave',function(event){
 							var dom = event.currentTarget || event.srcElement;
 							dom.parentNode.removeChild(dom);
 						})
 						_this_.listDom.appendChild(pop);
 					},500)
 				})
-				attachEventListener(cell,'mouseout',function(){
+				attachEventListener(cell,'mouseout',function(event){
 					var cell = event.currentTarget || event.srcElement;
 					clearTimeout(cell.myTimer);
 				})	
@@ -637,8 +637,8 @@ function ajax(method, url, data, successfn) {
 		renderTurner : function(data){
 			var _this_ = this;
 			//渲染课程列表
-			var render = function(){
-				var target = event.target || event.srcElement;
+			var render = function(event){
+				var target = event.target || event.srcElement || target;
 				var parentNode = _this_.turnerDom.querySelector('ul');
 				console.log(target)
 				for (var i = 0; i < parentNode.children.length; i++) {
@@ -657,7 +657,7 @@ function ajax(method, url, data, successfn) {
 				}
 			};
 			//重新渲染翻页器
-			var reTurner = function(){
+			var reTurner = function(event){
 				var target = event.target || event.srcElement;
 				var pageno = target.innerHTML || (_this_.config.currentPage - 1);
 				if(pageno < (_this_.config.totalPage)){
@@ -669,7 +669,9 @@ function ajax(method, url, data, successfn) {
 							var li = document.createElement('li');
 							li.innerHTML = i;
 							li.setAttribute('pageno', i);
-							attachEventListener(li, 'click', render);
+							attachEventListener(li, 'click', function(event){
+								render(event);
+							});
 							if (i == _this_.config.currentPage) {
 								li.className = 'active'
 							}
@@ -681,11 +683,15 @@ function ajax(method, url, data, successfn) {
 							turnerUl.appendChild(span);
 						}
 					}
-					turnerUl.children[10].onclick = reTurner;
-					turnerUl.children[1].onclick = reverse;
+					attachEventListener(turnerUl.children[10],'click',function(event){
+						reTurner(event);
+					});
+					attachEventListener(turnerUl.children[1],'click',function(event){
+						reverse(event);
+					});
 			}
 			//反向渲染翻页器
-			var reverse = function(){
+			var reverse = function(event){
 				var target = event.target || event.srcElement;
 				var pageno = target.innerHTML || (_this_.config.currentPage + 1);
 				turnerUl.innerHTML = '';
@@ -698,7 +704,9 @@ function ajax(method, url, data, successfn) {
 					var li = document.createElement('li');
 					li.innerHTML = i;
 					li.setAttribute('pageno', i);
-					attachEventListener(li, 'click', render);
+					attachEventListener(li, 'click', function(event){
+						render(event)
+					});
 					if (i == _this_.config.currentPage) {
 						li.className = 'active'
 					}
@@ -708,20 +716,25 @@ function ajax(method, url, data, successfn) {
 				span.innerHTML = '...';
 				turnerUl.appendChild(span);
 				var length = turnerUl.children.length;
-				attachEventListener(turnerUl.children[(length-2)],'click',reTurner);
-				attachEventListener(turnerUl.children[1],'click', reverse);
+				attachEventListener(turnerUl.children[(length-2)],'click',function(event){
+					reTurner(event);
+				});
+				attachEventListener(turnerUl.children[1],'click', function(event){
+					reverse(event);
+				});
 			}
-			function clickHandler(){
-				var target = event.target || event.srcElement
+			function clickHandler(event){
+				var event = event || window.event || arguments.callee.caller.arguments[0];
+				var target = event.target || event.srcElement;
 				var pageno = target.innerHTML;
 				if(pageno < 10) {
-					render();
+					render(event);
 				} else {
-					render();
-					reTurner();
+					render(event);
+					reTurner(event);
 				}
 			};
-			function nextHandler(){
+			function nextHandler(event){
 				if((_this_.config.currentPage + 1) <= _this_.config.totalPage){
 					_this_.config.currentPage += 1;
 					_this_.setPostData()
@@ -733,7 +746,7 @@ function ajax(method, url, data, successfn) {
 					var lis = turnerUl.querySelectorAll('li');
 					var lim = turnerUl.querySelectorAll('li')[9].innerHTML;
 					if (_this_.config.currentPage > lim) {
-						reTurner();
+						reTurner(event);
 					} else {
 						for (var i = 0; i < lis.length; i++) {
 							lis[i].className = ''
@@ -744,7 +757,7 @@ function ajax(method, url, data, successfn) {
 					}
 				}
 			};
-			function lastHandler(){
+			function lastHandler(event){
 				if((_this_.config.currentPage - 1) >= 1){
 					_this_.config.currentPage -= 1;
 					_this_.setPostData()
@@ -756,7 +769,7 @@ function ajax(method, url, data, successfn) {
 					var lis = turnerUl.querySelectorAll('li');
 					var lim = turnerUl.querySelector('li').innerHTML;
 					if (_this_.config.currentPage < lim) {
-						reverse();
+						reverse(event);
 					} else {
 						for (var i = 0; i < lis.length; i++) {
 							lis[i].className = ''
@@ -775,7 +788,9 @@ function ajax(method, url, data, successfn) {
 					var li = document.createElement('li');
 					li.innerHTML = i + 1;
 					li.setAttribute('pageno', i + 1);
-					attachEventListener(li, 'click', clickHandler);
+					attachEventListener(li, 'click', function(event){
+						clickHandler(event);
+					});
 					turnerUl.appendChild(li);
 				}
 			} else {
@@ -783,7 +798,9 @@ function ajax(method, url, data, successfn) {
 					var li = document.createElement('li');
 					li.innerHTML = i + 1;
 					li.setAttribute('pageno', i + 1);
-					attachEventListener(li, 'click', clickHandler);
+					attachEventListener(li, 'click', function(event){
+						clickHandler(event);
+					});
 					turnerUl.appendChild(li);
 				};
 				var span = document.createElement('span');
@@ -793,8 +810,12 @@ function ajax(method, url, data, successfn) {
 			turnerUl.children[0].className = 'active';
 			var next = _this_.turnerDom.querySelector('.next');
 			var last = _this_.turnerDom.querySelector('.last');
-			next.onclick = nextHandler;
-			last.onclick = lastHandler;
+			next.onclick = function(event){
+				nextHandler(event);
+			};
+			last.onclick = function(event){
+				lastHandler(event);
+			};
 		},
 	}
 	Courses.int = function(){

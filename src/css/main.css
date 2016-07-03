@@ -39,7 +39,7 @@
 .m-nav .follow{font-size: 12px;font-family: simsun;vertical-align: middle;line-height: 89px;}
 .m-nav .follow button:hover{background: url(../img/bg.png) 9px -24px no-repeat, #2fb556;}
 .m-nav .follow span{color: #666;}
-.m-nav .followed{float: left;width: 106px;height: 21px;border: 1px solid #efefef;
+.m-nav .followed{float: left;width: 106px;margin-top: 34px;height: 21px;border: 1px solid #efefef;
   border-radius: 1px;box-sizing: border-box;
   font: 12px/21px simsun;vertical-align: middle;
   color: #999;background: url(../img/bg.png) 6px -750px no-repeat, #f8f8f8;}
@@ -166,7 +166,7 @@
 /*登录表单*/
 .m-login .formDiv{z-index: 99;position: fixed;left: 50%;top: 50%;transform: translate(-50%,-50%);
   width: 387px;height: 288px;padding:30px 0 0 40px;box-sizing: border-box;background: #fff;}
-.m-login legend{margin-bottom: 20px;font: bold 18px/1 "Microsoft YaHei";color: #444;}
+.m-login legend{margin-bottom: 20px;font-size: 18px;font-weight: bold;font: bold 18px/18px "Microsoft YaHei";color: #444;}
 .m-login input{width: 295px;height: 45px;box-sizing: border-box;vertical-align: middle;}
 .m-login .username, .password{margin-bottom: 15px;padding-left:10px;border: 1px solid #dfdfdf;
   font: 16px/45px "Microsoft YaHei";color: #ccc;background: #fafafa;}
