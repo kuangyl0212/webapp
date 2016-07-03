@@ -572,8 +572,7 @@ function ajax(method, url, data, successfn) {
 			var _this_ = this;
 			var tabs = this.tabsDom.children;
 			for (var i = 0; i < tabs.length; i++) {
-				attachEventListener(tabs[i], 'click', function(){
-					var event = event || window.event || arguments.callee.caller.arguments[0];
+				attachEventListener(tabs[i], 'click', function(event){
 				var target = event.target || event.srcElement;
 				_this_.setType(target.getAttribute('type'));
 				for (var i = 0; i < tabs.length; i++) {
